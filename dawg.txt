@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawg House Events</title>
+<style>
+/* ---------- Global Styles ---------- */
+body { margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f8f8f8; color:#333; }
+header, footer { text-align:center; background:#222; color:#fff; padding:20px; }
+header h1{margin:0;font-size:2.5rem;} header p{margin:5px 0 0 0; color:#ccc;}
+main{max-width:1200px;margin:20px auto;padding:0 15px;}
+button{cursor:pointer;}
+
+/* ---------- Event Cards ---------- */
+.events-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px;}
+.event-card{background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:0.3s;}
+.event-card:hover{transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.15);}
+.event-card img{width:100%; height:180px; object-fit:cover;}
+.event-card .content{padding:15px;}
+.event-card h3{margin:0 0 10px 0; font-size:1.25rem; color:#222;}
+.event-card p{margin:0 0 10px 0; font-size:0.9rem; color:#555;}
+.event-card button{background:#222; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; transition:0.3s;}
+.event-card button:hover{background:#444;}
+
+/* ---------- Event Details ---------- */
+.event-details img{width:100%; border-radius:12px; margin-bottom:15px;}
+.event-details h2{margin-top:0; font-size:2rem;}
+.event-details p{line-height:1.5; margin-bottom:10px;}
+.event-details ul{list-style:disc; padding-left:20px; margin-bottom:20px;}
+.event-details button{background:#4caf50; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; margin-right:10px; transition:0.3s;}
+.event-details button:hover{background:#45a049;}
+
+/* ---------- Seat Picker ---------- */
+.seat-grid{display:inline-block; background:#f2f2f2; padding:15px; border-radius:12px; margin-bottom:20px;}
+.seat-row{display:flex; margin-bottom:5px;}
+.seat{width:35px; height:35px; margin:2px; text-align:center; line-height:35px; border-radius:6px; cursor:pointer; user-select:none; font-size:0.8rem; transition:0.2s; background:#eee; border:1px solid #ccc;}
+.seat:hover{transform:scale(1.1);}
+.seat.selected{background:#4caf50;color:#fff;}
+.seat.taken{background:#aaa; cursor:not-allowed;}
+.seat.premium{border:2px solid gold;}
+.seat.corner{border:2px solid orange;}
+
+/* ---------- Cart ---------- */
+.cart{background:#fff; padding:15px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-width:500px; margin-bottom:30px;}
+.cart h4{margin-top:0;}
+.cart-item{display:flex; justify-content:space-between; margin-bottom:5px;}
+.cart-item button{background:none; border:none; color:red; cursor:pointer;}
+
+/* ---------- Buttons ---------- */
+.btn{padding:8px 15px; border-radius:6px; font-weight:bold; border:none; cursor:pointer;}
+.btn-back{background:#ccc; color:#222;}
+.btn-back:hover{background:#bbb;}
+.btn-reserve{background:#4caf50; color:#fff;}
+.btn-reserve:hover{background:#45a049;}
+
+/* ---------- Footer ---------- */
+footer p{margin:5px 0 0 0; font-size:0.9rem; color:#ccc;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:600px){.seat{width:28px;height:28px;line-height:28px;font-size:0.7rem;}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Dawg House Events</h1>
+<p>Professional Event Planning for Card, Car, and Vintage Shows</p>
+</header>
+
+<main id="main">
+<!-- Content injected by JS -->
+</main>
+
+<footer>
+<p>&copy; 2025 Dawg House Events</p>
+<p>Contact: hello@dawghouse.events | (312) 555-0199</p>
+</footer>
+
+<script>
+// ================== Data ==================
+const EVENTS = [
+{
+id:1,name:"Dawg House Card Show - Nov 1, 2025",date:"Nov 1, 2025",location:"Dawg House Convention Center, Chicago, IL",
+description:"Join us for our largest trading card event! Vendors showcase collectibles, memorabilia, and more.",
+amenities:["Free Wi-Fi","Loading dock access","Electric hookups","24/7 security","Food court"],
+rows:8,cols:12,premiumRows:[1,2],
+cornerSeats:[{r:1,c:1},{r:1,c:12},{r:8,c:1},{r:8,c:12}],reserved:[]
+},
+{
+id:2,name:"Dawg House Car & Vintage Show - Oct 10, 2025",date:"Oct 10, 2025",location:"Downtown Motor Hall, Detroit, MI",
+description:"Experience vintage and modern vehicles. Vendors include restorers, services, and memorabilia collectors.",
+amenities:["Indoor/Outdoor booths","Premium parking","EV charging","Photography packages","Networking mixer"],
+rows:6,cols:10,premiumRows:[1],cornerSeats:[{r:1,c:1},{r:1,c:10},{r:6,c:1},{r:6,c:10}],reserved:[]
+}
+];
+
+let currentPage='home',selectedEvent=null,selectedSeats=[];
+
+const main=document.getElementById('main');
+
+// ================== Functions ==================
+function showHome(){
+currentPage='home';
+main.innerHTML='<h2>Upcoming Events</h2><div class="events-grid"></div>';
+const grid=main.querySelector('.events-grid');
+EVENTS.forEach(ev=>{
+const card=document.createElement('div');
+card.className='event-card';
+card.innerHTML=`<img src="https://picsum.photos/400/200?random=${ev.id}" alt="${ev.name}">
+<div class="content">
+<h3>${ev.name}</h3>
+<p>${ev.date} | ${ev.location}</p>
+<p>${ev.description.substring(0,100)}...</p>
+<button onclick="showEventDetails(${ev.id})">View Details</button>
+</div>`;
+grid.appendChild(card);
+});
+}
+
+function showEventDetails(eventId){
+currentPage='details';
+selectedEvent=EVENTS.find(e=>e.id===eventId);
+selectedSeats=[];
+main.innerHTML=`<div class="event-details">
+<button class="btn btn-back" onclick="showHome()">← Back to Events</button>
+<h2>${selectedEvent.name}</h2>
+<p><strong>Date:</strong> ${selectedEvent.date}</p>
+<p><strong>Location:</strong> ${selectedEvent.location}</p>
+<p>${selectedEvent.description}</p>
+<h3>Amenities:</h3>
+<ul>${selectedEvent.amenities.map(a=>`<li>${a}</li>`).join('')}</ul>
+<button class="btn btn-reserve" onclick="showSeatPicker()">Pick Your Booths</button>
+</div>`;
+}
+
+function showSeatPicker(){
+currentPage='seats';
+selectedSeats=[];
+main.innerHTML=`<button class="btn btn-back" onclick="showEventDetails(${selectedEvent.id})">← Back to Details</button>
+<h2>${selectedEvent.name} - Select Booths</h2>
+<div id="seat-grid" class="seat-grid"></div>
+<div class="cart" id="cart"><h4>Selected Booths: None</h4></div>
+<button class="btn btn-reserve" onclick="reserveSeats()">Reserve Booths</button>`;
+renderSeats();
+}
+
+function renderSeats(){
+const grid=document.getElementById('seat-grid'); grid.innerHTML='';
+for(let r=1;r<=selectedEvent.rows;r++){
+const rowDiv=document.createElement('div'); rowDiv.className='seat-row';
+for(let c=1;c<=selectedEvent.cols;c++){
+const seat=document.createElement('div'); seat.className='seat'; seat.textContent=c;
+if(selectedEvent.premiumRows.includes(r)) seat.classList.add('premium');
+if(selectedEvent.cornerSeats.some(s=>s.r===r && s.c===c)) seat.classList.add('corner');
+if(selectedEvent.reserved.some(s=>s.r===r && s.c===c)) seat.classList.add('taken');
+seat.onclick=()=>toggleSeat(r,c,seat);
+rowDiv.appendChild(seat);
+}
+grid.appendChild(rowDiv);
+}
+updateCart();
+}
+
+function toggleSeat(r,c,seatDiv){
+const key=`R${r}C${c}`;
+if(seatDiv.classList.contains('taken')) return;
+if(seatDiv.classList.contains('selected')){
+seatDiv.classList.remove('selected');
+selectedSeats=selectedSeats.filter(s=>s!==key);
+} else {
+seatDiv.classList.add('selected');
+selectedSeats.push(key);
+}
+updateCart();
+}
+
+function updateCart(){
+const cart=document.getElementById('cart'); if(!cart) return;
+cart.innerHTML=`<h4>Selected Booths: ${selectedSeats.join(', ') || 'None'}</h4>`;
+}
+
+function reserveSeats(){
+if(selectedSeats.length===0){ alert('Select at least one booth'); return; }
+selectedSeats.forEach(s=>{
+const r=parseInt(s.slice(1,s.indexOf('C')));
+const c=parseInt(s.slice(s.indexOf('C')+1));
+selectedEvent.reserved.push({r,c});
+});
+alert('Booths reserved: '+selectedSeats.join(', '));
+showSeatPicker();
+}
+
+// ================== Initialize ==================
+showHome();
+</script>
+
+</body>
+</html>
