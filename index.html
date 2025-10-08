@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dawg House Events</title>
-  <!-- Fun, playful font -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dawg House Events - Table Booking</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * {
@@ -59,7 +58,7 @@
       color: #e63946;
     }
 
-    /* Hero / Home */
+    /* Hero */
     .hero {
       text-align: center;
       padding: 4rem 2rem;
@@ -93,62 +92,34 @@
       box-shadow: 0 0 15px rgba(230,57,70,0.5);
     }
 
-    /* Upcoming Event graphic */
-    .upcoming-event {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #111;
-      color: white;
-      border-radius: 20px;
-      padding: 2rem;
-      margin: 3rem auto;
-      max-width: 700px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    .event-graphic {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(135deg, #e63946, #f1faee);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: #111;
-      border-radius: 15px;
-      margin-bottom: 1rem;
-    }
-
-    /* Table layout */
-    .tables-layout {
+    /* Floor plan layout */
+    .floor-plan {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 20px;
-      justify-items: center;
       margin-top: 2rem;
+      justify-items: center;
     }
 
     .table {
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 60px;
       background-color: #fff;
       border: 3px solid #111;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       font-weight: 700;
-      transition: 0.3s;
+      cursor: pointer;
       position: relative;
+      transition: 0.3s;
     }
 
     .table.selected {
       background-color: #e63946;
       color: white;
       border-color: #d62828;
-      transform: scale(1.1);
+      transform: scale(1.05);
       box-shadow: 0 0 10px rgba(230,57,70,0.7);
     }
 
@@ -161,12 +132,12 @@
     .table-label {
       position: absolute;
       top: -20px;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: #111;
     }
 
     .selected-info {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       text-align: center;
       font-size: 1.2rem;
     }
@@ -226,17 +197,44 @@
       cursor: pointer;
     }
 
-    @media (max-width: 768px) {
-      .tables-layout {
-        grid-template-columns: repeat(3, 1fr);
+    /* Upcoming event graphic */
+    .upcoming-event {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #111;
+      color: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 3rem auto;
+      max-width: 700px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .event-graphic {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #e63946, #f1faee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #111;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width:768px){
+      .floor-plan {
+        grid-template-columns: repeat(2,1fr);
       }
 
-      .table {
-        width: 60px;
-        height: 60px;
+      .table{
+        width: 100px;
+        height: 50px;
       }
 
-      .event-graphic {
+      .event-graphic{
         font-size: 1.5rem;
         height: 150px;
       }
@@ -253,7 +251,7 @@
     </nav>
   </header>
 
-  <!-- HOME PAGE -->
+  <!-- Home Page -->
   <div id="home" class="page active">
     <section class="hero">
       <h1>JOIN OUR NEXT EVENT</h1>
@@ -261,7 +259,6 @@
       <a class="btn nav-link" data-page="tables">Book a Table</a>
     </section>
 
-    <!-- Upcoming Event -->
     <section>
       <h2>Upcoming Events</h2>
       <div class="upcoming-event">
@@ -274,28 +271,28 @@
     </section>
   </div>
 
-  <!-- TABLES PAGE -->
+  <!-- Tables Page -->
   <div id="tables" class="page">
     <section>
       <h2>Select Your Table</h2>
-      <p style="text-align:center;">Click a table to reserve it.</p>
+      <p style="text-align:center;">Click a table to purchase it online.</p>
 
-      <div class="tables-layout" id="tablesLayout"></div>
+      <div class="floor-plan" id="floorPlan"></div>
 
       <div class="selected-info" id="selectedInfo">No table selected.</div>
 
-      <form id="bookingForm">
+      <form id="purchaseForm">
         <input type="text" name="fullname" placeholder="Full Name" required>
         <input type="email" name="email" placeholder="Email Address" required>
         <input type="tel" name="phone" placeholder="Phone Number" required>
         <input type="hidden" name="tableNumber" id="tableNumber" required>
         <textarea name="notes" placeholder="Special Requests or Notes"></textarea>
-        <button type="submit">Submit Booking</button>
+        <button type="submit">Purchase Table</button>
       </form>
     </section>
   </div>
 
-  <!-- CONTACT PAGE -->
+  <!-- Contact Page -->
   <div id="contact" class="page">
     <section>
       <h2>Contact Us</h2>
@@ -329,47 +326,45 @@
       });
     });
 
-    // Table generation
-    const tablesLayout = document.getElementById('tablesLayout');
+    // Floor Plan Table Setup
+    const floorPlan = document.getElementById('floorPlan');
     const selectedInfo = document.getElementById('selectedInfo');
     const tableNumberInput = document.getElementById('tableNumber');
 
     const totalTables = 20;
-    const occupiedTables = [3, 7, 12, 15]; // Example occupied
+    const occupiedTables = [3, 7, 12, 15]; // already booked
 
     for (let i = 1; i <= totalTables; i++) {
       const table = document.createElement('div');
       table.classList.add('table');
       table.textContent = i;
-
-      if(occupiedTables.includes(i)) {
+      if(occupiedTables.includes(i)){
         table.classList.add('occupied');
       }
 
       table.addEventListener('click', () => {
         if(table.classList.contains('occupied')) return;
-        document.querySelectorAll('.table').forEach(t => t.classList.remove('selected'));
+        document.querySelectorAll('.table').forEach(t=>t.classList.remove('selected'));
         table.classList.add('selected');
         selectedInfo.textContent = `Table ${i} selected`;
         tableNumberInput.value = i;
       });
 
-      tablesLayout.appendChild(table);
+      floorPlan.appendChild(table);
     }
 
-    // Booking form
-    document.getElementById('bookingForm').addEventListener('submit', e => {
+    // Purchase form
+    document.getElementById('purchaseForm').addEventListener('submit', e=>{
       e.preventDefault();
-      if(!tableNumberInput.value) {
+      if(!tableNumberInput.value){
         alert('Please select a table first!');
         return;
       }
-      alert(`Booking confirmed for Table ${tableNumberInput.value}!`);
+      alert(`Table ${tableNumberInput.value} purchased!`);
       e.target.reset();
-      document.querySelectorAll('.table').forEach(t => t.classList.remove('selected'));
+      document.querySelectorAll('.table').forEach(t=>t.classList.remove('selected'));
       selectedInfo.textContent = 'No table selected.';
     });
   </script>
 </body>
 </html>
-
