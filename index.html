@@ -4,22 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dawg House Events</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Fun, playful font -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
     }
 
     body {
+      font-family: 'Fredoka One', cursive;
       background-color: #f9f9f9;
-      color: #333;
+      color: #111;
     }
 
     header {
-      background-color: #222;
+      background-color: #111;
       color: white;
       display: flex;
       justify-content: space-between;
@@ -28,9 +29,9 @@
     }
 
     .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 2rem;
       letter-spacing: 2px;
+      color: #e63946;
     }
 
     nav a {
@@ -42,25 +43,37 @@
     }
 
     nav a:hover, nav a.active {
-      color: #e63946; /* subtle red highlight */
+      color: #e63946;
       border-bottom: 2px solid #e63946;
     }
 
+    section {
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #e63946;
+    }
+
+    /* Hero / Home */
     .hero {
       text-align: center;
-      padding: 5rem 2rem;
+      padding: 4rem 2rem;
       background: linear-gradient(to right, #e63946, #f1faee);
-      color: #222;
+      color: #111;
     }
 
     .hero h1 {
       font-size: 3rem;
       margin-bottom: 1rem;
-      letter-spacing: 2px;
     }
 
     .hero p {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       margin-bottom: 2rem;
     }
 
@@ -69,30 +82,46 @@
       color: white;
       padding: 0.8rem 2rem;
       border-radius: 30px;
-      text-decoration: none;
       font-weight: 600;
+      text-decoration: none;
       transition: 0.3s;
       display: inline-block;
     }
 
     .btn:hover {
       background-color: #d62828;
-      box-shadow: 0 0 15px rgba(230, 57, 70, 0.5);
+      box-shadow: 0 0 15px rgba(230,57,70,0.5);
     }
 
-    section {
-      padding: 4rem 2rem;
-      max-width: 1000px;
-      margin: auto;
+    /* Upcoming Event graphic */
+    .upcoming-event {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #111;
+      color: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 3rem auto;
+      max-width: 700px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    h2 {
-      color: #e63946;
-      margin-bottom: 2rem;
-      text-align: center;
+    .event-graphic {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #e63946, #f1faee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #111;
+      border-radius: 15px;
+      margin-bottom: 1rem;
     }
 
-    .tables-grid {
+    /* Table layout */
+    .tables-layout {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 20px;
@@ -101,17 +130,18 @@
     }
 
     .table {
-      width: 70px;
-      height: 70px;
-      background-color: #f1faee;
-      border: 2px solid #ccc;
-      border-radius: 12px;
+      width: 80px;
+      height: 80px;
+      background-color: #fff;
+      border: 3px solid #111;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       transition: 0.3s;
+      position: relative;
     }
 
     .table.selected {
@@ -119,12 +149,20 @@
       color: white;
       border-color: #d62828;
       transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(230,57,70,0.7);
     }
 
     .table.occupied {
-      background-color: #aaa;
+      background-color: #555;
+      color: #ccc;
       cursor: not-allowed;
-      color: white;
+    }
+
+    .table-label {
+      position: absolute;
+      top: -20px;
+      font-size: 0.8rem;
+      color: #111;
     }
 
     .selected-info {
@@ -137,7 +175,7 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      background: #ffffff;
+      background: #fff;
       padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 2px 15px rgba(0,0,0,0.1);
@@ -168,7 +206,7 @@
     }
 
     footer {
-      background-color: #222;
+      background-color: #111;
       color: white;
       text-align: center;
       padding: 1.5rem;
@@ -189,22 +227,18 @@
     }
 
     @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      nav a {
-        margin: 0.5rem 0;
-      }
-
-      .tables-grid {
-        grid-template-columns: repeat(4, 1fr);
+      .tables-layout {
+        grid-template-columns: repeat(3, 1fr);
       }
 
       .table {
         width: 60px;
         height: 60px;
+      }
+
+      .event-graphic {
+        font-size: 1.5rem;
+        height: 150px;
       }
     }
   </style>
@@ -226,6 +260,18 @@
       <p>Dawg House Trade Night — October 18th, 2025</p>
       <a class="btn nav-link" data-page="tables">Book a Table</a>
     </section>
+
+    <!-- Upcoming Event -->
+    <section>
+      <h2>Upcoming Events</h2>
+      <div class="upcoming-event">
+        <div class="event-graphic">Dawg House Trade Night</div>
+        <p><strong>Date:</strong> October 18th, 2025</p>
+        <p><strong>Time:</strong> 6PM - 11PM</p>
+        <p><strong>Location:</strong> Dawg House Sports Lounge</p>
+        <p>Join us for trading, raffles, and fun!</p>
+      </div>
+    </section>
   </div>
 
   <!-- TABLES PAGE -->
@@ -234,13 +280,9 @@
       <h2>Select Your Table</h2>
       <p style="text-align:center;">Click a table to reserve it.</p>
 
-      <div class="tables-grid" id="tablesGrid">
-        <!-- Tables will be generated here by JS -->
-      </div>
+      <div class="tables-layout" id="tablesLayout"></div>
 
-      <div class="selected-info" id="selectedInfo">
-        No table selected.
-      </div>
+      <div class="selected-info" id="selectedInfo">No table selected.</div>
 
       <form id="bookingForm">
         <input type="text" name="fullname" placeholder="Full Name" required>
@@ -287,15 +329,15 @@
       });
     });
 
-    // Generate 20 tables
-    const tablesGrid = document.getElementById('tablesGrid');
+    // Table generation
+    const tablesLayout = document.getElementById('tablesLayout');
     const selectedInfo = document.getElementById('selectedInfo');
     const tableNumberInput = document.getElementById('tableNumber');
 
     const totalTables = 20;
-    const occupiedTables = [3, 7, 12]; // Example of already booked tables
+    const occupiedTables = [3, 7, 12, 15]; // Example occupied
 
-    for(let i = 1; i <= totalTables; i++) {
+    for (let i = 1; i <= totalTables; i++) {
       const table = document.createElement('div');
       table.classList.add('table');
       table.textContent = i;
@@ -306,15 +348,13 @@
 
       table.addEventListener('click', () => {
         if(table.classList.contains('occupied')) return;
-
         document.querySelectorAll('.table').forEach(t => t.classList.remove('selected'));
         table.classList.add('selected');
-
         selectedInfo.textContent = `Table ${i} selected`;
         tableNumberInput.value = i;
       });
 
-      tablesGrid.appendChild(table);
+      tablesLayout.appendChild(table);
     }
 
     // Booking form
